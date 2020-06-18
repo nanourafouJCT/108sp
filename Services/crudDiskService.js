@@ -20,9 +20,9 @@ const updateDisk = async (distToUpdate) => {
     }
 };
 
-const getAllDisk = async (query = {}) => {
+const getAllDisk = async (query = {}, lean = false) => {
     try {
-        const results = await diskModel.find(query);
+        const results = lean ? await diskModel.find(query).lean() :  await diskModel.find(query);
         return results;
     } catch (e) {
         console.log(`Cannot get all theses disk.`);

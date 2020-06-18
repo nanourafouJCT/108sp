@@ -32,14 +32,18 @@ const buildDisk = async (initialDisk = null) => {
 
 const selectADisk = async (diskList) => {
     const list = await diskList.map((disc, index) => {
-        return `${index} - ${disc.name}`;
+        return {Name: disc.name};
     });
     console.log('Select a disk number in the list');
-    console.log(list);
+    console.table(list);
+    // list.forEach(item => {
+    //     console.log(item);
+    // });
     const diskIndex = await prompts({
         type: 'number',
         name: 'value',
-        message: 'Select a disk ?',
+        message: 'Select a disk by index ?',
+        validate: value => value >= list.length ? `Index not found` : true
     });
     return diskList[diskIndex.value];
 };
@@ -101,8 +105,8 @@ const runShop = async () => {
                 console.log(`Successful deleted this item.`);
                 break;
             case 4:
-                diskList = await diskService.getAll();
-                console.log(diskList);
+                diskList = await diskService.getAll({}, true);
+                console.table(diskList);
                 break;
             case 5:
                 diskList = await diskService.getAll({qty: {$gt: 0}}); // all disponible list.
@@ -110,11 +114,15 @@ const runShop = async () => {
                 await buyDisk(selectedDisk);
                 console.log(`Successful buy this item.`)
                 break;
+            case -1:
+                break;
             default:
                 console.log(`Invalid input !`)
                 break;
         }
     } while (choice.value >= 0);
+
+    console.log(`Shop closed !`);
 };
 
 module.exports.run = runShop;

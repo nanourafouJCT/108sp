@@ -10,6 +10,7 @@ async function start() {
     console.log('Starting');
     await connect(databaseUrl);
     await shopService.run();
+    process.exit(0);
 
 }
 
